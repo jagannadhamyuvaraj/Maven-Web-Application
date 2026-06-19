@@ -21,7 +21,7 @@
 		<spring.version>5.1.2.RELEASE</spring.version>
 		<junit.version>4.11</junit.version>
 		<log4j.version>1.2.17</log4j.version>
-		<sonar.host.url>http://3.145.142.155:9000/</sonar.host.url>
+		<sonar.host.url>http://172.31.30.66:9000/</sonar.host.url>
 		<sonar.login>squ_e7aea8c06ea150e2ecf3b8b7f565b9610edfd528</sonar.login>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -97,13 +97,13 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>jenkins</name>
-	      <url>http://18.225.225.95:8081/repository/jenkins/</url>
+	      <url>http://172.31.47.251:8081/repository/jenkins/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>jenkins-snapshot</name>
-	      <url>http://18.225.225.95:8081/repository/jenkins-snapshot/</url>
+	      <url>http://172.31.47.251:8081/repository/jenkins-snapshot/</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
