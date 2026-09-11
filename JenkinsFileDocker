@@ -37,6 +37,7 @@ pipeline {
                     sh 'docker login -u jagannadhamyuvaraj -p ${DockerHub_PAT}'
    
                 }
+                sh 'docker push jagannadhamyuvaraj/login:${buildNumber}'
             }
         }
     }
