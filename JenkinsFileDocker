@@ -28,6 +28,8 @@ pipeline {
                     sh 'docker login -u jagannadhamyuvaraj -p ${DockerHub_PAT}'
    
                 }
+                sh 'sudo usermod -aG docker $USER'
+                sh 'newgrp docker'
 
             }
         }
