@@ -51,7 +51,16 @@ pipeline {
         }
         stage('Remove the push image from server'){
             steps(){
-                sh 'docker rmi -f jagannadhamyuvaraj/login:${buildNumber}'
+                sh "docker rmi -f jagannadhamyuvaraj/login:${buildNumber}"
+            }
+        }
+        stage("Deploy image in application server") {
+            steps(){
+                sshagent(credentials: ['DeploymentServer_SSH']) {
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.200.146.134 docker rm -f maven-container || true " 
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@54.200.146.134 docker run -d --name maven-container -p 8080:8080 jagannadhamyuvaraj/login:${buildNumber}" 
+    
+               }
             }
         }
     }
