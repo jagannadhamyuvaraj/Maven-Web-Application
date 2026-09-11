@@ -28,8 +28,6 @@ pipeline {
                     sh 'docker login -u jagannadhamyuvaraj -p ${DockerHub_PAT}'
    
                 }
-                sh 'sudo usermod -aG docker $USER'
-                sh 'newgrp docker'
 
             }
         }
@@ -43,7 +41,11 @@ pipeline {
         stage('Push Image to DockerHub')
         {
             steps()
-            {    
+            {
+                withCredentials([string(credentialsId: 'DockerHub_PAT', variable: 'DockerHub_PAT')]) {
+                    sh 'docker login -u jagannadhamyuvaraj -p ${DockerHub_PAT}'
+   
+                }
                 sh 'docker push jagannadhamyuvaraj/login:${buildNumber}'
             }
         }
