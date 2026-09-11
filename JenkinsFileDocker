@@ -3,6 +3,10 @@ pipeline {
     tools {
         maven 'Maven_3.9.9'
     }
+    environment
+    {
+        buildNumber = "${BUILD_NUMBER}"
+    }
     stages {
         stage('CheckoutCode')
         {
@@ -16,6 +20,23 @@ pipeline {
             steps()
             {
                 sh 'mvn clean package'
+            }
+        }
+        stage('Builddockerimage')
+        {
+            steps()
+            {
+                sh 'docker build -t jagannadhamyuvaraj/login:${buildNumber} .'
+            }
+        }
+        stage('Push Image to DockerHub')
+        {
+            steps()
+            {
+                withCredentials([string(credentialsId: 'DockerHub_PAT', variable: 'DockerHub_PAT')]) {
+                    sh 'docker login -u jagannadhamyuvaraj -p ${DockerHub_PAT}'
+   
+                }
             }
         }
     }
