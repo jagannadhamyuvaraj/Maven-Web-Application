@@ -42,11 +42,28 @@ pipeline {
         }
         stage('Remove image from jenkins locally')
         {
-            steps(){
+            steps()
+            {
 
-                sh 'docker push 864780126718.dkr.ecr.us-east-1.amazonaws.com/maven-web-application:${buildNumber}'
+                sh 'docker rmi -f 864780126718.dkr.ecr.us-east-1.amazonaws.com/maven-web-application:${buildNumber}'
 
             }
         }
+        stage('update image version in kubernetes manifest')
+        {
+            steps()
+            {
+                sh "sed -i 's/Build_Tag/${buildNumber}/g' MavenWebApplication.yaml"
+            }
+        }
+        stage('Deploy changes to EKS Cluster')
+        {
+            steps()
+            {
+                sh "kubectl delete deployment webpage-deployment -n production || true"
+                sh "kubectl apply -f MavenWebApplication.yaml"
+            }
+        }
+        
     }
 }
