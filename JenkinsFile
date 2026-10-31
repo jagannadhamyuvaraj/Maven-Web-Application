@@ -13,7 +13,7 @@ pipeline {
         {
             steps()
             {
-                git branch: 'k8s', url: 
+                git branch: 'k8s', url: 'https://github.com/jagannadhamyuvaraj/Maven-Web-Application.git'
             }
         }
         stage('Build package using maven')
