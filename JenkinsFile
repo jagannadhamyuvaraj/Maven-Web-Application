@@ -1,3 +1,52 @@
 pipeline {
     agent any
+
+    tools{
+        maven "Maven_3.9.16"
+    }
+    environment
+    {
+        buildNumber = "${BUILD_NUMBER}"
+    }
+    stages{
+        stage('Checkout Code')
+        {
+            steps()
+            {
+                git branch: 'k8s', url: 
+            }
+        }
+        stage('Build package using maven')
+        {
+            steps()
+            {
+                'mvn clean package'
+            }
+ 
+        }
+        stage('Build Docker image')
+        {
+            steps()
+            {
+               
+                sh 'docker build -t 864780126718.dkr.ecr.us-east-1.amazonaws.com/maven-web-application:${buildNumber} .'
+            }
+        }
+        stage('push image to ecr')
+        {
+            steps()
+            {
+                sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 864780126718.dkr.ecr.us-east-1.amazonaws.com'
+                sh 'docker push 864780126718.dkr.ecr.us-east-1.amazonaws.com/maven-web-application:${buildNumber}'
+            }
+        }
+        stage('Remove image from jenkins locally')
+        {
+            steps(){
+
+                sh 'docker push 864780126718.dkr.ecr.us-east-1.amazonaws.com/maven-web-application:${buildNumber}'
+
+            }
+        }
+    }
 }
