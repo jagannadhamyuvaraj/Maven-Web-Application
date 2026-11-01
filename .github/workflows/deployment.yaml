@@ -36,3 +36,16 @@ jobs:
 
     - name: Push Docker image to AWS ecr
       run: docker push 864780126718.dkr.ecr.us-east-1.amazonaws.com/login:${{github.run_number}}
+
+    - name: update image tag in kubernetes manifest
+      run:
+        sed -i 's/Build_Tag/${buildNumber}/g' MavenWebApplication.yaml'
+
+    - name : configure kubeconfig
+      run:
+        aws eks update-kubeconfig --name Amazon_Production_EKS_Cluster --region us-east-1
+
+    - name: deploy to Amazon_Production_EKS_Cluster
+      run:
+        kubectl delete deployment webpage-deployment -n production || true
+        kubectl apply -f MavenWebApplication.yaml
