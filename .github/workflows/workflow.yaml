@@ -1,0 +1,25 @@
+name: Pull Request workflow
+
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+
+jobs:
+  pr_job:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '21'   # Change to '17' or '21' unless Java 25 is explicitly required
+          cache: 'maven'
+
+      - name: Java version
+        run: java --version
+
+      - name: Build and test with maven
+        run: mvn clean verify
