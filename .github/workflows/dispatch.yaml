@@ -2,11 +2,21 @@ name: Manual workflow Dispatch
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "select environment"
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
 
 jobs:
   run-manually:
     runs-on: ubuntu-latest
     steps:
       - name: Echo message
-        run: echo "This workflow was triggered manaully"
+        run: echo "This workflow was triggered manually"
+
       
