@@ -1,0 +1,27 @@
+name: Parallel Job execution
+on: [ push ]
+
+jobs:
+  Unit-Tests:
+    name: Unit Test cases
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running unit Tests..."
+      - run: sleep 10
+      - run: echo "Unit tests complete"
+      
+  Integration-Tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running Integration-Tests"
+      - run: sleep 10
+      - run: echo "Integration test completed"
+      
+  Linting:
+    name: code Linting
+    runs-on: ubuntu:latest
+    steps:
+      - run: echo "Running linter..."
+      - run: sleep 5
+      - run: echo "Linting completed"
