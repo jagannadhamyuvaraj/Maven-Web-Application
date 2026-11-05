@@ -17,6 +17,7 @@ jobs:
 
   test:
     name: Testing the application
+    needs: build
     runs-on: ubuntu-22.04
     steps:
       - name: test the code
@@ -24,6 +25,7 @@ jobs:
 
   deploy:
     name: Deploy to staging
+    needs: test
     runs-on: ubuntu-22.04
     steps:
       - name: Deploy step
