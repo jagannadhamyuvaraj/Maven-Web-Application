@@ -1,0 +1,73 @@
+# Pipeline on how to use Timeouts & error handling in jobs
+
+name: Error handling and Timeouts
+
+on:
+  [ push ]
+  
+jobs:
+  timeout-demo:
+    name: Timeout example
+    runs-on: ubuntu-22.04
+    timeout-minutes: 2 # Job will fail if it exceeds 2 minutes
+
+    steps:
+      - name: Long running process
+        run: |
+          echo "This job will timeout in 2 minutes"
+          sleep 130 # Intentionally sleep past 2 minutes to guarantee a timeout
+          echo "This wont execute"
+
+  error-handling:
+    name: Error Handling Examples
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: This step will fail
+        continue-on-error: true  # CORRECTED: Kept outside the run block
+        run: |
+          echo "About to run a command that fails"
+          exit 1 # Non-zero code fails the step
+
+      - name: This runs even if previous failed
+        run: echo "continuing despite previous failure"
+
+      - name: conditional execution on failure
+        if: failure()
+        run: echo "This runs because a previous step failed"
+
+      - name: Conditional execution on success
+        if: success()
+        run: echo "This runs because all previous steps succeeded"
+
+      - name: Always run cleanup
+        if: always()
+        run: echo "This always runs, regardless of success/failure"
+
+  Graceful-failure:
+    name: Graceful failure handling
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Attempt operation that might fail
+        id: risky-operation
+        continue-on-error: true
+        run: |
+          echo "Attempting risky operation..."
+          # simulate a command that might fail
+          random_exit=$(( RANDOM % 2 ))
+          if [ $random_exit -eq 0 ]; then
+            echo "Operation succeeded"
+            exit 0
+          else
+            echo "operation failed gracefully"
+            exit 1
+          fi
+
+      - name: Handle success case
+        if: steps.risky-operation.outcome == 'success'
+        run: echo "The risky operation succeeded! Proceeding..."
+
+      - name: Handle failure case
+        if: steps.risky-operation.outcome == 'failure'
+        run: echo "The risky operation failed but we can continue"
