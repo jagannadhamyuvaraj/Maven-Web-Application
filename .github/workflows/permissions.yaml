@@ -1,0 +1,41 @@
+name: Permissions workflows  #This worflow defines how we can give permissions to runner for our repo
+on:
+  workflow_dispatch: 
+#workflow-level permissions
+permissions: 
+  contents: read
+  issues: write
+  packages: none
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    #Job level permissions (overrides workflow level)
+    permissions:
+      contents: write #for committing changes
+      actions: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build project
+        run: echo "Building..."
+
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    #Job level permissions (overrides workflow-level)
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Deploying application
+        run: |
+          echo "Deploying..."
+      
+  
