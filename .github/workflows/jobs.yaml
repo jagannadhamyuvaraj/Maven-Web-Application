@@ -2,7 +2,7 @@ name: Multi-jobs
 
 on: 
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
