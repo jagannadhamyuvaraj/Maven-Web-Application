@@ -1,0 +1,51 @@
+# This workflow defines how to use shell parameter in pipeline
+
+name: shell-powershell
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  shell-demo:
+    name: working Directory Example
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: create project structure
+        run: |
+          mkdir -p frontend backend scripts
+          echo "Frontend code" > frontend/index.html
+          echo "backend code" > backend/server.js
+          echo "script content" > scripts/deploy.sh
+
+      - name: work in frontend directory
+        working-directory: ./frontend
+        run: |
+          echo "current directory: $(pwd)"
+          ls -la
+          
+      - name: work in backend directory
+        working-directory: ./backend
+        run: |
+          echo "current directory: $(pwd)"
+          ls -la
+          
+  powershell-demo:
+    name: how to use powershell
+    runs-on: windows-latest
+
+    steps:
+      - name: windows shell examples
+        shell: pwsh
+        run: |
+          Write-Host "Using powershell"
+          Get-ChildItem
+          $version = $PSVersionTable.PSVersion
+          Write-Host "Powershell version: $version"
+
+      - name: CMD example
+        shell: cmd
+        run: |
+          echo "using command prompt"
+          dir
