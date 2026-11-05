@@ -1,0 +1,18 @@
+name: Display working directory
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  Displaying-directory:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout-repository
+        uses: actions/checkout@v4
+        
+      - name: List files in workspace
+        run: ls -la ${{ github.workspace }}
+      
+        
