@@ -3,7 +3,7 @@ name: Display working directory
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   Displaying-directory:
