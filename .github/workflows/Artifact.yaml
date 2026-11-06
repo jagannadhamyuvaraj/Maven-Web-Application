@@ -1,0 +1,39 @@
+name: Artifact Demo
+on:
+  push:
+    branches: master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build application
+        run: |
+          echo "Building the app..."
+          mkdir dist
+          echo "hello world v1.0" > dist/app.txt
+          echo "Build completed at $(date)" > dist/build-info.txt
+
+      # Upload artifact
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-app-build
+          path: dist/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: my-app-build
+
+      - name: Deploy application
+        run: |
+          echo "Deploying files we built earlier"
+          cat app.txt
+          cat build-info.txt
