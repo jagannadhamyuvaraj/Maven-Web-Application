@@ -1,0 +1,17 @@
+# Pipeline workflow to use conditionals
+name: Conditional Demo
+
+on: [push, pull_request ]
+
+jobs:
+  security_scan:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running security scan..."
+
+  deploying-staging:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying to staging"
