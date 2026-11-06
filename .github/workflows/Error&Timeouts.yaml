@@ -3,7 +3,7 @@
 name: Error handling and Timeouts
 
 on:
-  [ push ]
+  workflow_dispatch: 
   
 jobs:
   timeout-demo:
