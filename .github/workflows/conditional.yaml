@@ -5,13 +5,13 @@ on: [push, pull_request ]
 
 jobs:
   security_scan:
-    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - run: echo "Running security scan..."
 
   deploying-staging:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - run: echo "Deploying to staging"
