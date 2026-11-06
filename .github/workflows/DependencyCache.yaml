@@ -1,0 +1,28 @@
+#This pipeline is used for caching dependencies to reduce workflow execution time
+# Cache Maven dependencies and build/test the Java web application.
+name: Maven dependency cache demo
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 8 and cache Maven dependencies
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+          cache: maven
+
+      - name: Build and test with Maven
+        run: mvn --batch-mode --no-transfer-progress verify
+          
+      
