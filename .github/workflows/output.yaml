@@ -1,0 +1,29 @@
+name: workflow for sending outputs of one job to another jobs
+on:
+  workflow_dispatch:
+
+jobs:
+  first-job:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.test_output }}
+      output2: ${{ steps.step2.outputs.another_output }}
+    steps:
+      - name: Set outputs
+        id: step1
+        run: |
+          echo "test_output=hello world" >> $GITHUB_OUTPUT
+
+      - name: set another output
+        id: step2
+        run: |
+          echo "another_output=yuvaraj" >> $GITHUB_OUTPUT
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: first-job
+    steps:
+      - name: use outputs from first job
+        run: |
+          echo "output1: ${{ needs.first-job.outputs.output1 }}"
+          echo "output2: ${{ needs.first-job.outputs.output2 }}"
