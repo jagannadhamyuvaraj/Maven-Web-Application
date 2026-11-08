@@ -3,11 +3,15 @@ description: Upload a file to an AWS S3 bucket
 
 inputs:
   file:
-    description: Path to the file in the checked-out workspace
+    description: Path to the file or directory in the checked-out workspace
     required: true
   bucket:
     description: Destination S3 bucket
     required: true
+  destination-prefix:
+    description: optional s3 key prefix
+    required: false
+    default: ""
   aws-region:
     description: AWS region for the bucket
     required: true
@@ -31,6 +35,35 @@ runs:
     - name: Upload file to S3
       shell: bash
       env:
-        S3_FILE: ${{ inputs.file }}
+        SOURCE: ${{ inputs.file }}
         S3_BUCKET: ${{ inputs.bucket }}
-      run: aws s3 cp "$S3_FILE" "s3://$S3_BUCKET/" --recursive
+        PREFIX: ${{ inputs.destination-prefix }}
+      run: |
+        set -euo pipefail
+
+        if [[ ! -e "$SOURCE" ]]; then
+          echo "::error::source path does not exist: $SOURCE"
+          exit 1
+        fi
+
+        # Remove trailing slash if present from the base bucket string
+        destination="s3://${S3_BUCKET%/}"
+
+        # Cleanly append prefix if provided, removing any leading/trailing slashes from the prefix
+        if [[ -n "$PREFIX" ]]; then
+          clean_prefix="${PREFIX#/}"
+          clean_prefix="${clean_prefix%/}"
+          destination="${destination}/${clean_prefix}"
+        fi
+
+        if [[ -d "$SOURCE" ]]; then
+          echo "Uploading directory: $SOURCE to $destination"
+          aws s3 cp "$SOURCE" "$destination" --recursive
+        elif [[ -f "$SOURCE" ]]; then
+          filename="$(basename "$SOURCE")"
+          echo "Uploading file: $SOURCE to ${destination}/${filename}"
+          aws s3 cp "$SOURCE" "${destination}/${filename}"
+        else
+          echo "::error::Source must be a regular file or directory: $SOURCE"
+          exit 1
+        fi
