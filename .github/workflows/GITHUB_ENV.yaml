@@ -1,0 +1,26 @@
+name: workflow to use environmental variables inside jobs
+
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set envrionments variable
+        run: |
+          echo "MY_VAR=yuvaraj" >> $GITHUB_ENV  
+          # GITHUB_ENV represents env variable
+
+      - name: Use environment variable
+        run: |
+          echo "The value is $MY_VAR"
+
+      - name: Use environment variable in another step
+        run: |
+          if [ "$MY_VAR" = "yuvaraj" ]; then
+            echo "MY_VAR is set correctly"
+          else
+            echo "MY_VAR is not set correctly"
+          fi
+
+      - name: Pring all the environmental varible
+        run: printenv
